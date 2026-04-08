@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stay Awake - Flavor Town</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 40px;
+      margin: 0;
+    }
+    h1 {
+      color: #ff4500;
+      font-size: 2.5em;
+    }
+    #time {
+      font-size: 5em;
+      margin: 30px 0;
+      color: #fa0000;
+      font-weight: bold;
+    }
+    #possum {
+      width: 220px;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+    #possum:active {
+      transform: scale(1.1);
+    }
+    button {
+      padding: 18px 50px;
+      font-size: 1.8em;
+      background: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background: #228b22;
+    }
+
+    /* Notes Section */
+    #notes-section {
+      margin-top: 60px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #notes-section h2 {
+      color: #389eceff;
+    }
+    #note-text {
+      width: 100%;
+      height: 220px;
+      padding: 15px;
+      font-size: 1.1em;
+      border: 2px solid rgba(19, 16, 16, 1)000ff;
+      border-radius: 10px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐭 Stay Awake Study Timer 🐭</h1>
+  <p id="time">00:00:00</p>
+  
+  
+  <button id="start">Start Studying</button>
+
+  <!-- Notes Section -->
+  <div id="notes-section">
+    <h2>📝 Study Notes</h2>
+    <textarea id="note-text" placeholder="Write your study notes here... They save automatically!"></textarea>
+    <div>
+      <button id="download-notes">📥 Download Notes as .txt</button>
+      <button id="clear-notes">🗑️ Clear Notes</button>
+    </div>
+  </div>
+
+  <script>
+    let timer;
+    let seconds = 0;
+    const display = document.getElementById('time');
+    const startBtn = document.getElementById('start');
+    const possumImg = document.getElementById('possum');
+    const noteTextarea = document.getElementById('note-text');
+    const downloadBtn = document.getElementById('download-notes');
+    const clearBtn = document.getElementById('clear-notes');
+
+    // Your MyInstants links
+    const sounds = [
+      "https://files.catbox.moe/u1pm9q.mp3",
+      "https://files.catbox.moe/7v4qnz.mp3",
+      "https://files.catbox.moe/2f0x0m.mp3",
+      "https://files.catbox.moe/p514o5.mp3"
+    ];
+
+    function playRandomSound() {
+      const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+      const audio = new Audio(randomSound);
+      audio.play().catch(() => {
+        console.log("Sound blocked or link not playable");
+      });
+    }
+
+    // Timer - NOW PLAYS SOUND EVERY 1 MINUTE (60 seconds)
+    startBtn.onclick = () => {
+      if (!timer) {
+        timer = setInterval(() => {
+          seconds++;
+          let hrs = Math.floor(seconds / 3600);
+          let mins = Math.floor((seconds % 3600) / 60);
+          let secs = seconds % 60;
+          display.textContent = 
+            `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+          // Changed from 300 to 60 → every 1 minute
+          if (seconds % 60 === 0 && seconds > 0) {
+            playRandomSound();
+          }
+        }, 1000);
+
+        startBtn.textContent = "Running... (don't fall asleep!)";
+        startBtn.style.background = "#8969ff";
+      }
+    };
+    // === NOTES SECTION ===
+    // Load saved notes
+    if (localStorage.getItem('studyNotes')) {
+      noteTextarea.value = localStorage.getItem('studyNotes');
+    }
+
+    // Auto-save notes as you type
+    noteTextarea.addEventListener('input', () => {
+      localStorage.setItem('studyNotes', noteTextarea.value);
+    });
+
+    // Download notes
+    downloadBtn.onclick = () => {
+      const text = noteTextarea.value.trim();
+      if (!text) {
+        alert("Write some notes first before downloading!");
+        return;
+      }
+
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'study-notes.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    // Clear notes
+    clearBtn.onclick = () => {
+      if (confirm("Delete all your notes?")) {
+        noteTextarea.value = '';
+        localStorage.removeItem('studyNotes');
+      }
+    };
+  </script>
+</body>
+</html>
