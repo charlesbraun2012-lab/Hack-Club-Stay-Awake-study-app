@@ -1,2 +1,1 @@
-I am new to coding so hopefully this turns out good i will be making more apps i did find that sometimes the website dosent play the SFX but im working on it (Update: Fixed) 
-you can acess the website quickly at https://2701039.playcode.io/ 
+I am new to coding so hopefully this turns out good i will be making more apps i did find that sometimes the website dosent play the SFX but im working on it (Update: Fixed) All you have to do is press the start timer button and every minuteit will play a "Motovational" SFX. Notes section saves but it is a good idea to download it as a .TXT file before exiting (There is no way to undo the "Clear All" button. You can acess the website quickly at https://2701039.playcode.io/ (I did not use thier Ai but i used thier free publisher)
